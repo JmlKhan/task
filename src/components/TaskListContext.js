@@ -10,9 +10,25 @@ const TaskListProvider = props => {
 
     const [tasks, setTasks] = useState(initialState);
 
-    useEffect( () => {
-        localStorage.setItem('tasks', JSON.stringify(tasks))
-    }, [tasks])
+     useEffect( () => {
+         localStorage.setItem('tasks', JSON.stringify(tasks))
+     }, [tasks])
+
+      useEffect( () => {
+         async function fetchData(){
+             try{ 
+                 const response = await fetch('http://jsonplaceholder.typicode.com/todos');
+                 const responseJSON = await response.json();
+                 setTasks(responseJSON);
+             }
+             catch{
+
+             }
+            
+         }
+                 fetchData();
+     }, []);
+    
 
     const [editItem, setEditItem] = useState(null);
 
@@ -38,6 +54,9 @@ const TaskListProvider = props => {
         setEditItem(null);
     };
 
+   
+   
+
     return ( 
         <TaskListContext.Provider 
         value={{
@@ -47,7 +66,7 @@ const TaskListProvider = props => {
             clearList, 
             findItem, 
             editItem, 
-            editTask
+            editTask,
             }}> 
             {props.children}
         </TaskListContext.Provider>
